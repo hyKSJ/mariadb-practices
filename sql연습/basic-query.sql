@@ -58,3 +58,17 @@ select name, birth from pet order by birth desc;
 
 -- 예6) where절에 null 다루기
 select name, birth, death from pet where death is null;
+select name, birth, death from pet where death is not null;
+
+-- 예7) like 검색(패턴검색)
+select name from pet where name like 'b%';
+select name from pet where name like '%fy';
+select name from pet where name like '%w%';
+select name from pet where name like '____';
+select name from pet where name like 'b____';
+
+-- 예8) 집계: count, avg, sum, max, min,...
+select count(*) from pet;
+
+select max(birth)
+  from pet;
