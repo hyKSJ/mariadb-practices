@@ -34,3 +34,9 @@ desc member;
 --
 -- dml
 --
+
+-- insert
+insert 
+	into member (no, email, password, name, dept, self_intro)
+    values (null, 'tkdwns9494@gmail.com', password('1234'), '김상준', '개발팀', null)
+    select * from member;
