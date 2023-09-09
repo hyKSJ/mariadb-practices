@@ -8,34 +8,34 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo.MemberVo;
+import bookmall.vo.BookVo;
 
-public class MemberDao {
 
-	public void insert(MemberVo vo) {
+public class BookDao {
+
+	public void insert(BookVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			conn = getConnection();
-			
-			String sql = "insert into member values(null,?,?,?,?)";
+
+			String sql = "insert into book values(null,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getPhone());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPassword());
-			
+
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setInt(2, vo.getPrice());
+			pstmt.setLong(3, vo.getCategoryNo());
+
 			pstmt.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(conn != null) {
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
@@ -45,8 +45,8 @@ public class MemberDao {
 
 	}
 
-	public List<MemberVo> findAll() {
-		List<MemberVo> result = new ArrayList<>();
+	public List<BookVo> findAll() {
+		List<BookVo> result = new ArrayList<>();
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -56,7 +56,7 @@ public class MemberDao {
 			conn = getConnection();
 
 			// 3. SQL 준비
-			String sql = "select * from member";
+			String sql = "select * from book";
 			pstmt = conn.prepareStatement(sql);
 
 			// 4. binding
@@ -67,17 +67,16 @@ public class MemberDao {
 			// 6. 결과 처리
 			while (rs.next()) {
 				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				String phone = rs.getString(3);
-				String email = rs.getString(4);
-				String password = rs.getString(5);
+				String title = rs.getString(2);
+				int price = rs.getInt(3);
+				Long categoryNo = rs.getLong(4);
+				
 
-				MemberVo vo = new MemberVo();
+				BookVo vo = new BookVo();
 				vo.setNo(no);
-				vo.setName(name);
-				vo.setPhone(phone);
-				vo.setEmail(email);
-				vo.setPassword(password);
+				vo.setTitle(title);
+				vo.setPrice(price);
+				vo.setCategoryNo(categoryNo);
 
 				result.add(vo);
 			}
@@ -103,7 +102,7 @@ public class MemberDao {
 
 		return result;
 	}
-	
+
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 		try {
@@ -112,10 +111,8 @@ public class MemberDao {
 			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
-		} 
+		}
 
-		
 		return conn;
 	}
-
 }

@@ -8,24 +8,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo.MemberVo;
+import bookmall.vo.OrderVo;
 
-public class MemberDao {
 
-	public void insert(MemberVo vo) {
+public class OrderDao {
+	public void insert(OrderVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		try {
 			conn = getConnection();
 			
-			String sql = "insert into member values(null,?,?,?,?)";
+			String sql = "insert into `order` values(null,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getPhone());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPassword());
+			pstmt.setString(1, vo.getOrderNo());
+			pstmt.setInt(2, vo.getPrice());
+			pstmt.setString(3, vo.getAddress());
+			pstmt.setLong(4, vo.getMemberNo());
 			
 			pstmt.executeQuery();
 		} catch (SQLException e) {
@@ -45,8 +45,8 @@ public class MemberDao {
 
 	}
 
-	public List<MemberVo> findAll() {
-		List<MemberVo> result = new ArrayList<>();
+	public List<OrderVo> findAll() {
+		List<OrderVo> result = new ArrayList<>();
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -56,7 +56,7 @@ public class MemberDao {
 			conn = getConnection();
 
 			// 3. SQL 준비
-			String sql = "select * from member";
+			String sql = "select * from `order`";
 			pstmt = conn.prepareStatement(sql);
 
 			// 4. binding
@@ -67,17 +67,17 @@ public class MemberDao {
 			// 6. 결과 처리
 			while (rs.next()) {
 				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				String phone = rs.getString(3);
-				String email = rs.getString(4);
-				String password = rs.getString(5);
+				String orderNo = rs.getString(2);
+				int price = rs.getInt(3);
+				String address = rs.getString(4);
+				Long memberNo = rs.getLong(5);
 
-				MemberVo vo = new MemberVo();
+				OrderVo vo = new OrderVo();
 				vo.setNo(no);
-				vo.setName(name);
-				vo.setPhone(phone);
-				vo.setEmail(email);
-				vo.setPassword(password);
+				vo.setOrderNo(orderNo);
+				vo.setPrice(price);
+				vo.setAddress(address);
+				vo.setMemberNo(memberNo);
 
 				result.add(vo);
 			}
@@ -117,5 +117,4 @@ public class MemberDao {
 		
 		return conn;
 	}
-
 }

@@ -8,34 +8,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo.MemberVo;
+import bookmall.vo.CategoryVo;
 
-public class MemberDao {
 
-	public void insert(MemberVo vo) {
+public class CategoryDao {
+	public void insert(CategoryVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			conn = getConnection();
-			
-			String sql = "insert into member values(null,?,?,?,?)";
+
+			String sql = "insert into category values(null,?)";
 			pstmt = conn.prepareStatement(sql);
-			
+
 			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getPhone());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPassword());
-			
+
 			pstmt.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(conn != null) {
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
@@ -45,8 +42,8 @@ public class MemberDao {
 
 	}
 
-	public List<MemberVo> findAll() {
-		List<MemberVo> result = new ArrayList<>();
+	public List<CategoryVo> findAll() {
+		List<CategoryVo> result = new ArrayList<>();
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -56,7 +53,7 @@ public class MemberDao {
 			conn = getConnection();
 
 			// 3. SQL 준비
-			String sql = "select * from member";
+			String sql = "select * from category";
 			pstmt = conn.prepareStatement(sql);
 
 			// 4. binding
@@ -68,16 +65,10 @@ public class MemberDao {
 			while (rs.next()) {
 				Long no = rs.getLong(1);
 				String name = rs.getString(2);
-				String phone = rs.getString(3);
-				String email = rs.getString(4);
-				String password = rs.getString(5);
 
-				MemberVo vo = new MemberVo();
+				CategoryVo vo = new CategoryVo();
 				vo.setNo(no);
 				vo.setName(name);
-				vo.setPhone(phone);
-				vo.setEmail(email);
-				vo.setPassword(password);
 
 				result.add(vo);
 			}
@@ -103,7 +94,7 @@ public class MemberDao {
 
 		return result;
 	}
-	
+
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 		try {
@@ -112,10 +103,8 @@ public class MemberDao {
 			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
-		} 
+		}
 
-		
 		return conn;
 	}
-
 }
